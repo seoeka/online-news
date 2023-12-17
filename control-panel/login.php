@@ -25,7 +25,7 @@ if(isset($_POST['login-submit'])) {
             $_SESSION['USER_ROLE'] = 'author';
             $_SESSION['USER_NAME'] = $authorRow['username'];
             $_SESSION['USER_ID'] = $authorRow['author_id'];
-            $_SESSION['USER_EMAIL'] = $author['email'];
+            $_SESSION['USER_EMAIL'] = $authorRow['email'];
             redirect("./index.php");
         } else {
             alert("Password Anda salah!");

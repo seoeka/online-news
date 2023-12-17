@@ -12,12 +12,14 @@
     if(strpos($uri,"/article.php") != false){
       $page_title = "TMnews - Artikel";
     }
+    /*
     if(strpos($uri,"/login.php") != false){
        $page_title = "TMNews - Login";
-    }
-    if(strpos($uri,"/bookmark.oho") != false){
+    } 
+    if(strpos($uri,"/bookmark.php") != false){
         $bookmark_active = "active";
     }
+    */
 ?>
 
 <!doctype html>
@@ -29,9 +31,10 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@48,400,0,0">
     <link rel="stylesheet" href="https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css">
+    <link rel="icon" href="../images/TMNews.ico" type="image/x-icon">
+
     <!-- Link Swiper's CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
-    <link rel="icon" href="../images/TMNews.ico" type="image/x-icon">
     <link rel="stylesheet" href="css/styles.css">
   </head>
   <body>
@@ -57,7 +60,7 @@
                 <a class="nav-link" href="#">Hiburan</a>
               </li>
             </ul>
-            <form class="d-flex" role="search">
+            <form class="d-flex" role="search" method="post" action="/search.php">
               <input class="form-control me-2" type="search" placeholder="Cari" aria-label="Search">
             </form>
           </div>
