@@ -6,6 +6,7 @@ body {
     font-family: 'Poppins';
     font-style: normal;
     color: black;
+    min-height: 100vh; 
 }
 h1, h2, .card-title {
     font-weight: 700;
@@ -43,7 +44,7 @@ header {
     margin-bottom: 80px;
 }
 .main {
-    color: white;
+    color: black;
 }
 .card-title, .main-caption {
     font-family: 'Playfair Display', serif;
@@ -55,12 +56,12 @@ header {
     padding: 0 0 12px 12px;
 }
 .c-main-head img {
-    max-height: 400px;
+    max-height: 500px;
     object-fit:cover;
 }
 .card-text-d {
     padding: 0 0 20px 20px;
-    max-width: 75%;
+    max-width: 66%;
 }
 .container {
     padding: 20px 70px;
@@ -140,6 +141,7 @@ footer {
     color: white;
     display: flex;
     justify-content: center;
+    margin-top: auto;
 }
 footer span {
     padding: 20px;

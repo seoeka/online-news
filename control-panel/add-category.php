@@ -7,8 +7,6 @@
 
     $category_name = str_replace('"','\"',$category_name);
 
-    $name   = $category_name.time(); 
-
     $sql = "INSERT INTO categories (category_name) 
             VALUES (\"$category_name\")"; 
 
@@ -19,6 +17,7 @@
       redirect('./categories.php');
     }else{ 
       echo "Gagal mengunggah Kategori!"; 
+      redirect('./add-category.php');
     } 
   }
 ?>

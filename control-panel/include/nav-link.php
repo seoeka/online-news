@@ -1,4 +1,6 @@
 <?php
+  $user_id = $_SESSION['USER_ID'];
+
   $art_sql = "SELECT COUNT(article_id) 
               AS no_of_articles 
               FROM articles";
@@ -6,7 +8,14 @@
   $art_data = mysqli_fetch_assoc($art_result);
   $no_of_articles = $art_data['no_of_articles'];
 
-          
+  $artau_sql = "SELECT COUNT(article_id) 
+              AS no_of_articles_au 
+              FROM articles 
+              WHERE author_id = {$user_id}";
+  $artau_result = mysqli_query($con,$artau_sql);
+  $artau_data = mysqli_fetch_assoc($artau_result);
+  $no_of_articles_au = $artau_data['no_of_articles_au'];
+        
   $cat_sql = "SELECT COUNT(category_id) 
               AS no_of_categories 
               FROM categories";

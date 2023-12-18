@@ -4,7 +4,7 @@
   require('./include/header.php');
 
   $user_role = $_SESSION['USER_ROLE'];
-
+  $author_id = $_SESSION['USER_ID'];
 ?>
 
 
@@ -39,21 +39,38 @@ function deleteConfirm(id) {
           $page = 1;
         }
         $offset = ($page - 1) * $limit;
-        $sql = "SELECT a.article_title, 
+        if ($_SESSION['USER_ROLE'] === 'admin') {
+            $sql = "SELECT a.article_title, 
+            a.article_id, 
+            a.created_at, 
+            au.username as author_name, 
+            a.article_image, 
+            a.article_type, 
+            a.article_active, 
+            a.article_desc, 
+            c.category_name 
+            FROM articles a
+            JOIN categories c ON a.category_id = c.category_id
+            JOIN author au ON a.author_id = au.author_id
+            ORDER BY a.created_at DESC
+            LIMIT {$offset},{$limit}";
+        }
+        elseif ($_SESSION['USER_ROLE'] === 'author') {
+            $sql = "SELECT a.article_title, 
                 a.article_id, 
                 a.created_at, 
-                au.username as author_name, 
                 a.article_image, 
-                a.article_type, 
-                a.article_active, 
+                a.article_active,
+                a.article_type,  
                 a.article_desc, 
                 c.category_name 
-                FROM articles a
-                JOIN categories c ON a.category_id = c.category_id
-                JOIN author au ON a.author_id = au.author_id
-                ORDER BY a.created_at DESC
-                LIMIT {$offset},{$limit}";
-
+                FROM articles a, categories c
+                WHERE a.author_id = {$author_id} 
+                AND a.category_id = c.category_id
+                ORDER BY a.created_at DESC,
+                a.article_id DESC
+                LIMIT {$offset},{$limit}"; 
+        }
                 $result = mysqli_query($con, $sql);
                 $num_rows = mysqli_num_rows($result);
 
@@ -87,7 +104,9 @@ function deleteConfirm(id) {
                     $article_desc = $data['article_desc'];
                     $article_image = $data['article_image'];
                     $article_date = $data['created_at'];
-                    $article_author = $data['author_name'];
+                    if ($_SESSION['USER_ROLE'] === 'admin') {
+                        $article_author = $data['author_name'];
+                    }                 
                     $article_active = $data['article_active'];
 
                     $article_desc = substr($article_desc,0,100);
@@ -147,7 +166,7 @@ function deleteConfirm(id) {
                         }
                         elseif($_SESSION['USER_ROLE'] === 'author'){
                             echo '
-                            <a class="btn btn-primary" href="./edit-article.php?id='.$article_id.'" title="Edit Artikel">
+                            <a class="btn btn-primary" href="./edit-article.php?id='.$article_id.'">
                               <span class="glyphicon glyphicon-pencil"></span>
                             </a>
                             <a class="btn btn-danger" href="javascript:deleteConfirm('.$article_id.')" title="Hapus Artikel">
@@ -175,7 +194,12 @@ function deleteConfirm(id) {
         <div class="text-center">
           <ul class="pagination pg-red">
             <?php
-              $paginationQuery = "SELECT * FROM articles";
+              if ($_SESSION['USER_ROLE'] === 'admin') {
+                $paginationQuery = "SELECT * FROM articles";
+              }
+              elseif($_SESSION['USER_ROLE'] === 'author') {
+                $paginationQuery = "SELECT * FROM articles WHERE author_id = $author_id ";
+              }
               $paginationResult = mysqli_query($con, $paginationQuery);
               if(mysqli_num_rows($paginationResult) > 0) {
                 $total_articles = mysqli_num_rows($paginationResult);

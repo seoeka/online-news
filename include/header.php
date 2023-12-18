@@ -1,13 +1,18 @@
 <?php
+    require('database.php');
+    require('functions.php');
+
+    session_start();
+    
     $uri = $_SERVER['REQUEST_URI'];
 
     $page_title = "";
     $home_active = "";
-    $bookmark_active = "";
 
     if(strpos($uri,"/index.php") != false){
         $page_title = "TMNews";
         $home_active = "active";
+        $bookmark_active = "";
     }
     if(strpos($uri,"/article.php") != false){
       $page_title = "TMnews - Artikel";
@@ -31,7 +36,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@48,400,0,0">
     <link rel="stylesheet" href="https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css">
-    <link rel="icon" href="../images/TMNews.ico" type="image/x-icon">
+    <link rel="icon" href="./images/TMNews.ico" type="image/x-icon">
 
     <!-- Link Swiper's CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
@@ -50,15 +55,31 @@
               <li class="nav-item">
                 <a class="nav-link <?php echo $home_active ?>" href="index.php">Beranda</a>
               </li>
-              <li class="nav-item">
-                <a class="nav-link <?php echo $teknologi_active ?>" href="#">Teknologi</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">Ekonomi</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">Hiburan</a>
-              </li>
+
+              <?php
+                $catQuery= " SELECT  category_id, category_name
+                                  FROM categories 
+                                  ORDER BY category_id ASC LIMIT 4";
+
+                $result = mysqli_query($con,$catQuery);
+
+                $row = mysqli_num_rows($result);
+            
+                if($row > 0) {
+              
+                while($data = mysqli_fetch_assoc($result)) {
+                  
+                  $category_id = $data['category_id'];
+                  $category_name = $data['category_name'];
+                  ?>
+                  <li class="nav-item">
+                    <a class="nav-link" href="kategori.php?id=<?php echo $category_id ?>">
+                    <?php echo $category_name ?></a>
+                  </li>
+                  <?php  
+                      }
+                    }
+                  ?>
             </ul>
             <form class="d-flex" role="search" method="post" action="/search.php">
               <input class="form-control me-2" type="search" placeholder="Cari" aria-label="Search">

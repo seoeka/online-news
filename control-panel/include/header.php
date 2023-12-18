@@ -71,6 +71,15 @@
         $name = false;
       }
 
+      if(strpos($uri,"/add-author.php") != false){
+        $page_title = " Tambah Author";
+        $home = false;
+        $category = false;
+        $author = true;
+        $pass = false; 
+        $name = false;
+      }
+
       if(strpos($uri,"/change-password.php") != false){
         $page_title = " Ubah Password";
         $home = false;
@@ -171,16 +180,26 @@
           <h1><?php echo $page_title ?></h1>
         </div>
         <?php
-          if (isset($_SESSION['USER_ROLE']) && $_SESSION['USER_ROLE'] === 'admin') {
-            ?>
-            <div class="col-md-2 btn-box">
-                <a href="./add-category.php" class="btn btn-warning" type="button">
-                    Tambah Kategori
-                </a>
-            </div>
-            <?php
+            if ((isset($_SESSION['USER_ROLE'])) && $_SESSION['USER_ROLE'] === 'admin') {
+              // Jika user role adalah admin, tetapkan link dan teks untuk menambah kategori
+              $addButtonLink = "./add-category.php";
+              $addButtonText = "Tambah Kategori";
+
+              // Periksa apakah halaman saat ini adalah artikel.php
+              if (strpos($_SERVER['PHP_SELF'], 'author.php') !== false) {
+                $addButtonLink = "./add-author.php";
+                $addButtonText = "Tambah Author";
+              }
+              ?>
+              <div class="col-md-2 btn-box">
+                  <a href="<?php echo $addButtonLink; ?>" class="btn btn-warning" type="button">
+                      <?php echo $addButtonText; ?>
+                  </a>
+              </div>
+            <?php 
           }
         ?>
+
         <?php
           if (isset($_SESSION['USER_ROLE']) && $_SESSION['USER_ROLE'] === 'author') {
             ?>

@@ -11,7 +11,7 @@
   } 
 
   $user_id = $_SESSION['USER_ID'];
-
+  $author_name = $_SESSION['USER_NAME'];
   
   if (isset($_POST['submit'])) { 
 
