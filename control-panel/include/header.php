@@ -127,9 +127,38 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>TMNews - Control Panel | <?php echo $page_title ?></title>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
-  <link href="../control-panel/assets/styles.css" rel="stylesheet" />
+  <link href="../control-panel/assets/css/styles.css" rel="stylesheet" />
   <link rel="icon" href="../images/TMNews.ico" type="image/x-icon" />
   <link rel="stylesheet" type="text/css" href="slide navbar style.css">
+  <style>
+    .btn-hitam,
+    .btn-oranye,
+    .btn-biru,
+    .btn-merah {
+      color: #ffffff !important;
+    }
+  
+    .btn-hitam {
+      background-color: #000000 !important;
+    }
+
+    .btn-oranye {
+        background-color: #ffa500 !important;
+    }
+
+    .btn-biru {
+        background-color: #0000ff !important;
+    }
+
+    .btn-merah {
+        background-color: #ff0000 !important;
+    }
+
+    .btn-lain {
+        background-color: #dddddd !important;
+        color: #000000; /* Teks hitam atau sesuai kebutuhan */
+    }
+  </style>
 </head>
 <body>
   <nav class="navbar navbar-default navbar-static-top">

@@ -8,13 +8,46 @@
 
     $page_title = "";
     $home_active = "";
+    $kategori_active = "";
+
+    $kategori_active = array(
+      '1' => '', 
+      '2' => '',
+      '3' => '',
+      '4' => '',
+  );
+    $catQuery= " SELECT category_id, category_name
+    FROM categories 
+    ORDER BY category_id ASC LIMIT 4";
+    
+    $resultNav = mysqli_query($con,$catQuery);
+    $result = mysqli_query($con,$catQuery);
+    $rowNavbar = mysqli_num_rows($result);
+    $row = mysqli_num_rows($result);
 
     if(strpos($uri,"/index.php") != false){
         $page_title = "TMNews";
         $home_active = "active";
-        $bookmark_active = "";
+        $kategori_active = array(
+          '1' => '',
+          '2' => '',
+          '3' => '',
+          '4' => '',
+        );
+      }
+
+    if($rowNavbar > 0) {     
+      while($page_tt = mysqli_fetch_assoc($resultNav)) {
+        $category_id = $page_tt['category_id'];
+        $category_name = $page_tt['category_name'];
+        if(strpos($uri,"/kategori.php?id=$category_id") != false){
+          $page_title = "TMnews - $category_name";
+          $kategori_active[$category_id] = 'active';
+        }
+      }
     }
-    if(strpos($uri,"/article.php") != false){
+
+    if(strpos($uri,"/artikel.php") != false){
       $page_title = "TMnews - Artikel";
     }
     /*
@@ -25,6 +58,8 @@
         $bookmark_active = "active";
     }
     */
+
+ 
 ?>
 
 <!doctype html>
@@ -44,7 +79,7 @@
   </head>
   <body>
     <header>
-      <nav class="navbar navbar-expand-lg navbar-light bg-light" style="padding: 15px 80px;">
+      <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
           <a class="navbar-brand" href="index.php"><img src="images/TMNews.png" style="height:24px; align-items:flex-start;" alt="TMNews"></a>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
@@ -57,13 +92,6 @@
               </li>
 
               <?php
-                $catQuery= " SELECT  category_id, category_name
-                                  FROM categories 
-                                  ORDER BY category_id ASC LIMIT 4";
-
-                $result = mysqli_query($con,$catQuery);
-
-                $row = mysqli_num_rows($result);
             
                 if($row > 0) {
               
@@ -73,7 +101,7 @@
                   $category_name = $data['category_name'];
                   ?>
                   <li class="nav-item">
-                    <a class="nav-link" href="kategori.php?id=<?php echo $category_id ?>">
+                    <a class="nav-link <?php echo $kategori_active[$category_id] ?>" href="kategori.php?id=<?php echo $category_id ?>">
                     <?php echo $category_name ?></a>
                   </li>
                   <?php  
@@ -81,8 +109,8 @@
                     }
                   ?>
             </ul>
-            <form class="d-flex" role="search" method="post" action="/search.php">
-              <input class="form-control me-2" type="search" placeholder="Cari" aria-label="Search">
+            <form class="d-flex" role="search" method="get" action="cari.php">
+              <input class="form-control me-2" type="search" placeholder="Cari" aria-label="Search" name="q" >
             </form>
           </div>
         </div>

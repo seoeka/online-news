@@ -1,7 +1,7 @@
 <?php
   require('./include/header.php');
   
-  if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
+  if (isset($_POST['submit'])) {
     
     if(isset($_SESSION['USER_ID'])){ 
       $user_id = $_SESSION['USER_ID'];
@@ -14,9 +14,11 @@
     if ($_SESSION['USER_ROLE'] == 'admin') {
         $user_table = 'admin';
         $user_id_column = 'admin_id';
+
     } elseif ($_SESSION['USER_ROLE'] == 'author') {
         $user_table = 'author';
         $user_id_column = 'author_id';
+
     } else {
         exit("Anda bukan bagian dari Admin atau Author!");
     }
@@ -34,11 +36,14 @@
 
     if($rows > 0) {
       $data = mysqli_fetch_assoc($result);
+      $email = $data['email'];
       $password_check = md5($old_password) === $data['password'];
+
       if($password_check) {
         $update_sql = " UPDATE $user_table
                         SET $user_table.password = '{$str_new_pass}'
-                        WHERE $user_id_column = {$user_id}";
+                        WHERE $user_id_column = {$user_id}
+                        AND $user_table.email = '{$email}'";
  
         $update_result = mysqli_query($con,$update_sql);
         if(!$update_result) {
@@ -112,7 +117,6 @@
       </div>
     </div>
   </div>
-  <script src="./assets/js/change-pass.js"></script>
 </section>
 
 <?php

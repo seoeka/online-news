@@ -20,7 +20,7 @@
   
   unlink("./assets/images/articles/{$article_img}");
 
-  $delete_sql = " DELETE FROM articles 
+  $delete_sql = "DELETE FROM articles 
                   WHERE article_id = {$article_id}";
   $cat_result = mysqli_query($con, $delete_sql); 
  

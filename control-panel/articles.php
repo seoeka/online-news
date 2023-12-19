@@ -5,8 +5,8 @@
 
   $user_role = $_SESSION['USER_ROLE'];
   $author_id = $_SESSION['USER_ID'];
+  $art_type = query("SELECT * FROM article_type art ORDER by artype_id");
 ?>
-
 
 <script>
 function deleteConfirm(id) {
@@ -40,41 +40,40 @@ function deleteConfirm(id) {
         }
         $offset = ($page - 1) * $limit;
         if ($_SESSION['USER_ROLE'] === 'admin') {
-            $sql = "SELECT a.article_title, 
-            a.article_id, 
-            a.created_at, 
-            au.username as author_name, 
-            a.article_image, 
-            a.article_type, 
-            a.article_active, 
-            a.article_desc, 
-            c.category_name 
-            FROM articles a
-            JOIN categories c ON a.category_id = c.category_id
-            JOIN author au ON a.author_id = au.author_id
-            ORDER BY a.created_at DESC
-            LIMIT {$offset},{$limit}";
+                  $sql = query("SELECT
+                  a.article_id,
+                  c.category_name,
+                  a.article_title,
+                  a.article_desc,
+                  a.article_image,
+                  a.created_at,
+                  au.username,
+                  a.article_active,
+                  art.artype_name,
+                  art.artype_id
+                  FROM articles a
+                  JOIN categories c ON a.category_id = c.category_id
+                  JOIN author au ON a.author_id = au.author_id
+                  JOIN article_type art ON a.article_type = art.artype_id
+                  ORDER BY a.created_at DESC
+                  LIMIT {$offset},{$limit}");
         }
         elseif ($_SESSION['USER_ROLE'] === 'author') {
-            $sql = "SELECT a.article_title, 
-                a.article_id, 
-                a.created_at, 
-                a.article_image, 
-                a.article_active,
-                a.article_type,  
-                a.article_desc, 
-                c.category_name 
-                FROM articles a, categories c
-                WHERE a.author_id = {$author_id} 
-                AND a.category_id = c.category_id
-                ORDER BY a.created_at DESC,
-                a.article_id DESC
-                LIMIT {$offset},{$limit}"; 
+                 $sql = query("SELECT 
+                  a.article_id,
+                  c.category_name,
+                  a.article_title,
+                  a.article_desc,
+                  a.article_image,
+                  a.created_at
+                  FROM articles a
+                  JOIN categories c ON a.category_id = c.category_id
+                  JOIN author au ON a.author_id = au.author_id
+                  WHERE a.author_id = {$author_id} 
+                  ORDER BY a.created_at DESC,
+                  a.article_id DESC
+                  LIMIT {$offset},{$limit}");
         }
-                $result = mysqli_query($con, $sql);
-                $num_rows = mysqli_num_rows($result);
-
-
       ?>
       <div class="panel panel-default">
         <div class="panel-heading main-color-bg">
@@ -95,20 +94,20 @@ function deleteConfirm(id) {
               <th style="min-width: 150px">Aksi</th>
             </tr>
             <?php
-                if($num_rows > 0) {
-                  while($data = mysqli_fetch_assoc($result)) {
-                    $category_name = $data['category_name'];
-                    $article_id = $data['article_id'];
-                    $article_title = $data['article_title'];
-                    $article_type = $data['article_type'];
-                    $article_desc = $data['article_desc'];
-                    $article_image = $data['article_image'];
-                    $article_date = $data['created_at'];
-                    if ($_SESSION['USER_ROLE'] === 'admin') {
-                        $article_author = $data['author_name'];
-                    }                 
-                    $article_active = $data['article_active'];
-
+                if (count($sql) > 0) {
+                  foreach ($sql as $row) {          
+                      $category_name = $row['category_name'];
+                      $article_id = $row['article_id'];
+                      $article_title = $row['article_title'];
+                      $article_desc = $row['article_desc'];
+                      $article_image = $row['article_image'];
+                      $article_date = $row['created_at'];
+                          if ($_SESSION['USER_ROLE'] === 'admin') {
+                              $article_author = $row['username'];
+                              $artype_id = $row['artype_id'];
+                              $artype_name = $row['artype_name'];
+                          }       
+                    $article_active = $row['article_active'];
                     $article_desc = substr($article_desc,0,100);
                     $article_date = date("d M y",strtotime($article_date));
 
@@ -135,20 +134,46 @@ function deleteConfirm(id) {
                         </td>
                         <td>';
                         if($_SESSION['USER_ROLE'] === 'admin'){
-                            if($article_type > 0) {
-                                echo '
-                                <a class="btn btn-danger" href="./show-trend.php?id='.$article_id.'" title="Remove Article Trend">
+                            if ($artype_id > 0)
+                              {
+                                ?> <!-- The modal -->
+            <div class="modal fade" id="myEditModal<?= $article_id ?>" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+                                  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+                                    <div class="modal-content">
+                                      <div class="modal-header">
+                                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                      </button>
+                                        <h4 class="modal-title" id="modalLabel">Modal Title</h4>
+                                      </div>
+                                      <form method="POST" action="config/crud.php">
+                                      <input type="hidden" name="id" value="<?=$row['article_id']?>">
+                                      <input type="hidden" name="id" value="<?=$article_id?>">
+
+                                      <div class="modal-body">
+                                        <div class="col">
+                                            <label class="form-label">Jenis Artikel</label>
+                                            <select class="form-select" name="art_type" required>
+                                            <option value="<?=$artype_id?>" selected="selected" hidden=""> <?=$row['artype_name']?> </option>
+                                            <?php foreach($art_type as $at) : ?>
+                                            <option value="<?=$at['artype_id']; ?>"><?= $at['artype_name']; ?></option>
+                                            <?php endforeach; ?>
+                                            </select>
+                                          </div>                    
+                                        </div>
+                                      <div class="modal-footer">
+                                        <button type="submit" class="btn btn-success" name="bt_editP">Update</button>
+                                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Keluar</button>
+                                      </div>
+                                      </form>
+                                    </div>
+                                  </div>
+                                </div>
+                                <button class="btn custom-btn <?=getButtonTypeColor($artype_id)?>" data-toggle="modal" data-target="#myEditModal<?= $article_id ?>" title="<?= $artype_name?>">
                                   <span class="glyphicon glyphicon-heart"></span>
-                                </a>
-                                ';
-                              }
-                              else {
-                                echo '
-                                <a class="btn btn-warning" href="./activate-trend.php?id='.$article_id.'" title="Make Article Trending">
-                                  <span class="glyphicon glyphicon-heart-empty"></span>
-                                </a>
-                                ';
-                              }
+                                </button>
+            <?php }
+        
                               if($article_active > 0) {
                                 echo '
                                 <a class="btn btn-success" href="./hide-article.php?id='.$article_id.'" title="Sembunyikan Artikel">
@@ -163,7 +188,8 @@ function deleteConfirm(id) {
                                 </a>
                                 ';
                               }
-                        }
+                      ?>
+                  <?php      }
                         elseif($_SESSION['USER_ROLE'] === 'author'){
                             echo '
                             <a class="btn btn-primary" href="./edit-article.php?id='.$article_id.'">
@@ -172,14 +198,11 @@ function deleteConfirm(id) {
                             <a class="btn btn-danger" href="javascript:deleteConfirm('.$article_id.')" title="Hapus Artikel">
                               <span class="glyphicon glyphicon-trash"></span>
                             </a>';
-                        }
-                        echo '
+                          }?>
                         </td>
                       </tr>
-                    ';
-                  }
-                }
-                else {
+<?php                  }
+                } else {
                   echo '
                     <td colspan="7" align="center" style="padding-top: 28px; color: var(--active-color);">
                       <h4>
@@ -187,7 +210,7 @@ function deleteConfirm(id) {
                       </h4>
                     </td>
                   ';
-                }
+                  }
               ?>
           </table>
         </div>

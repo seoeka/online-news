@@ -36,7 +36,7 @@
     
     if ($result)  { 
       move_uploaded_file($tempname, $folder);
-      alert("Article posted. Please wait for Admin to activate it.");
+      alert("Artikel telah diunggah. Silahkan tunggu Admin untuk mengaktiasi artikel.");
       redirect('./articles.php');
     }else{ 
       echo "Failed to upload Data"; 

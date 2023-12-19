@@ -31,9 +31,11 @@
   $au_data = mysqli_fetch_assoc($au_result);
   $no_of_au = $au_data['no_of_authors'];   
 
-  $type_sql = "SELECT COUNT(artype_id) 
-              AS no_of_type
-              FROM article_type";
+  
+  $type_sql = "SELECT COUNT(DISTINCT a.article_type) AS no_of_type
+               FROM articles a
+               JOIN author au ON a.author_id = au.author_id
+               WHERE au.author_id = $user_id";
   $type_result = mysqli_query($con,$type_sql);
   $type_data = mysqli_fetch_assoc($type_result);
   $no_of_type = $type_data['no_of_type'];   

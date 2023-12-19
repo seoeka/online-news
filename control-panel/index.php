@@ -46,7 +46,7 @@
             <div class="col-md-4">
               <?php
               if ($user_role === 'admin') {
-                  echo '<a href="author.php"><div class="well dash-box">';
+                  echo '<a href="author.php" style="color: #333333;"><div class="well dash-box">';
                   echo '<h2><span class="glyphicon glyphicon-user"></span>';
                   echo $no_of_au;
                   echo '</h2>';
