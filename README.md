@@ -1,5 +1,5 @@
 # Overview
-Online News is an application designed to provide users with a seamless experience in accessing the latest and most relevant news articles. This application is powered by a robust database named db_news, ensuring a comprehensive collection of articles spanning various topics.
+Online News is an application designed to provide users with a seamless experience in accessing the latest and most relevant news articles. This application is powered by a robust database named `db_news`, ensuring a comprehensive collection of articles spanning various topics.
 
 ## **Built with**
 
