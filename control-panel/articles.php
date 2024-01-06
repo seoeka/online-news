@@ -106,8 +106,9 @@ function deleteConfirm(id) {
                               $article_author = $row['username'];
                               $artype_id = $row['artype_id'];
                               $artype_name = $row['artype_name'];
+                              $article_active = $row['article_active'];
+
                           }       
-                    $article_active = $row['article_active'];
                     $article_desc = substr($article_desc,0,100);
                     $article_date = date("d M y",strtotime($article_date));
 
